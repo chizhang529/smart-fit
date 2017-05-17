@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Smart Fitting</string>
+
+    <string name="welcome_uniqlo">Welcome to Uniqlo</string>
+    <string name="scanreminder">Enjoy Your Smart Fitting!</string>
+    <string name="scan">GET STARTED</string>
+</resources>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+
+    tools:context="edu.stanford.me202.smartfitting.WelcomeActivity">
+
+    <TextView
+        android:id="@+id/welcometext"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:text="@string/welcome_uniqlo"
+        android:textSize="60sp"/>
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:src="@drawable/uniqlo"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:text="@string/scanreminder"
+        android:textSize="40sp"
+        android:fontFamily="sans-serif-condensed"/>
+
+    <com.dd.CircularProgressButton
+        android:id="@+id/scanButton"
+        android:layout_width="320dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="40sp"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        app:cpb_cornerRadius="48dp"
+        app:cpb_textIdle="@string/scan"
+        app:cpb_selectorIdle="@drawable/idle_state_selector"
+        app:cpb_selectorComplete="@drawable/complete_state_selector"
+        app:cpb_selectorError="@drawable/error_state_selector"
+        app:cpb_colorIndicator="@color/cpb_blue"
+        app:cpb_colorIndicatorBackground="@color/cpb_grey"
+        app:cpb_colorProgress="@color/cpb_white"
+        app:cpb_iconComplete="@drawable/success"
+        app:cpb_iconError="@drawable/error"/>
+
+</LinearLayout>
