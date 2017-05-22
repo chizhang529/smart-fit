@@ -78,7 +78,7 @@ public class WelcomeActivity extends AppCompatActivity {
             if (intent.getAction().equals(bleService.ACTION_GATT_CONNECTED)){
                 // TODO: if needed, tell Arduino that BLE is connected
                 Log.d(BLETAG, "CONNECTED");
-                String string = "c";
+                String string = "Good check: connected!";
                 byte[] b = string.getBytes();
                 bleService.writeRXCharacteristic(b);
             }
@@ -127,12 +127,22 @@ public class WelcomeActivity extends AppCompatActivity {
                         .setOnNegativeClicked(new FancyAlertDialog.OnNegativeClicked() {
                             @Override
                             public void OnClick(View view, Dialog dialog) {
-                                dialog.dismiss();
-                                scanButton.setProgress(0);
+                            dialog.dismiss();
+                            scanButton.setProgress(0);
+
+                            String string = "Good check again!";
+                            byte[] b = string.getBytes();
+                            bleService.writeRXCharacteristic(b);
                             }
                         })
                         .build();
                 alert.show();
+
+                String scannerID = "D5:3C:ED:8E:F2:08";
+                // Initialize bluetooth service
+                bleService.initialize();
+                // Try to connect to bluetooth of this address
+                bleService.connect(scannerID);
             }
         });
     }
