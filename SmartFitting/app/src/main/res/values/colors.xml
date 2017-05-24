@@ -5,4 +5,12 @@
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
     <color name="crimson">#DC143C</color>
+    <color name="Turquoise">#3B9C9C</color>
+    <color name="BlueGreen">#7BCCB5</color>
+    <color name="White">#FFFFFF</color>
+    <color name="SeaShell">#FFF5EE</color>
+    <color name="Black">#000000</color>
+    <color name="Transparent">#997BCCB5</color>
+    <color name="YellowGold">#FFE769</color>
+    <color name="OrangeGold">#FFCA88</color>
 </resources>
