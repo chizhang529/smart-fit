@@ -45,16 +45,16 @@
         android:gravity="center"
         android:textColor="@android:color/black"
         android:text="@string/scanreminder"
-        android:textSize="35sp"/>
+        android:textSize="30sp"/>
 
     <com.dd.CircularProgressButton
         android:id="@+id/scanButton"
-        android:layout_width="320dp"
+        android:layout_width="250dp"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.5"
         android:layout_gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:fontFamily="sans-serif-condensed"
         android:textStyle="bold"
         app:cpb_cornerRadius="48dp"

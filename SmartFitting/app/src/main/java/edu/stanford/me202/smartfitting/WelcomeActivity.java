@@ -116,33 +116,37 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 scanButton.setProgress(50);
-                FancyAlertDialog.Builder alert = new FancyAlertDialog.Builder(WelcomeActivity.this)
-                        .setImageRecourse(R.drawable.rfid)
-                        .setTextTitle("scan your tag")
-                        .setTitleFont("fonts/ralewaysemibold.ttf")
-                        .setTextSubTitle("please let us know what you are trying on")
-                        .setSubTitleFont("fonts/ralewaylight.ttf")
-                        .setNegativeButtonText("LATER")
-                        .setNegativeColor(R.color.crimson)
-                        .setOnNegativeClicked(new FancyAlertDialog.OnNegativeClicked() {
-                            @Override
-                            public void OnClick(View view, Dialog dialog) {
-                            dialog.dismiss();
-                            scanButton.setProgress(0);
-
-                            String string = "Good check again!";
-                            byte[] b = string.getBytes();
-                            bleService.writeRXCharacteristic(b);
-                            }
-                        })
-                        .build();
-                alert.show();
+//                FancyAlertDialog.Builder alert = new FancyAlertDialog.Builder(WelcomeActivity.this)
+//                        //.setImageRecourse(R.drawable.success)
+//                        .setTextTitle("scan your tag")
+//                        .setTitleFont("fonts/ralewaysemibold.ttf")
+//                        .setTextSubTitle("please let us know what you are trying on")
+//                        .setSubTitleFont("fonts/ralewaylight.ttf")
+//                        .setNegativeButtonText("LATER")
+//                        .setNegativeColor(R.color.crimson)
+//                        .setOnNegativeClicked(new FancyAlertDialog.OnNegativeClicked() {
+//                            @Override
+//                            public void OnClick(View view, Dialog dialog) {
+//                            dialog.dismiss();
+//                            scanButton.setProgress(0);
+//
+//                            String string = "Good check again!";
+//                            byte[] b = string.getBytes();
+//                            bleService.writeRXCharacteristic(b);
+//                            }
+//                        })
+//                        .build();
+//                alert.show();
 
                 String scannerID = "D5:3C:ED:8E:F2:08";
                 // Initialize bluetooth service
                 bleService.initialize();
                 // Try to connect to bluetooth of this address
                 bleService.connect(scannerID);
+
+                // TODO: Pesudo-click switch
+                Intent intent = new Intent(WelcomeActivity.this, ProductActivity.class);
+                startActivity(intent);
             }
         });
     }

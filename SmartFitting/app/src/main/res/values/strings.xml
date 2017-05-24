@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Smart Fitting</string>
 
-    <string name="welcome">WELOCME TO</string>
+    <string name="welcome">WELCOME TO</string>
     <string name="uniqlo">U&#160;N&#160;I&#160;Q&#160;L&#160;O</string>
     <string name="scanreminder">Enjoy Your Smart Fitting!</string>
     <string name="scan">GET STARTED</string>
