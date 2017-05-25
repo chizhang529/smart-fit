@@ -23,7 +23,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.dd.CircularProgressButton;
-import com.geniusforapp.fancydialog.FancyAlertDialog;
+//import com.geniusforapp.fancydialog.FancyAlertDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
