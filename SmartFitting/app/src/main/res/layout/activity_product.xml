@@ -7,50 +7,111 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical"
         android:background="@color/White"
+        android:clipChildren="false"
         tools:context="edu.stanford.me202.smartfitting.ProductActivity">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3.5"
-            android:src="@drawable/shirt1"
-            android:padding="30dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.7"
+            android:layout_weight="4.2"
             android:paddingTop="10dp"
             android:layout_gravity="center_vertical"
-            android:background="@color/White">
+            android:background="@color/White"
+            android:clipChildren="false">
+
+            <ImageView
+                android:id="@+id/product_image"
+                android:layout_width="match_parent"
+                android:layout_height="620dp"
+                android:src="@drawable/shirt1"
+                android:padding="30dp"/>
 
             <Button
+                android:layout_below="@id/product_image"
                 android:id="@+id/request_button"
                 android:layout_width="280dp"
                 android:layout_height="60dp"
-                android:background="@color/cpb_red_dark"
+                android:background="@color/crimson"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="Request"
+                android:textSize="20dp"
                 android:textColor="@color/White"/>
 
-            <ImageButton
+            <com.github.clans.fab.FloatingActionMenu
+                android:id="@+id/size_menu"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@mipmap/size"
                 android:layout_toLeftOf="@id/request_button"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="30dp"
-                android:background="@color/White"/>
+                android:src="@drawable/size_option"
+                app:menu_animationDelayPerItem="0"
+                app:menu_shadowColor="#444"
+                app:menu_colorNormal="#FFB805"
+                app:menu_colorPressed="#F2AB00"
+                app:menu_colorRipple="#D99200"
+                android:layout_alignBottom="@id/request_button">
 
-            <ImageButton
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/size_button1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/size_option"
+                    app:fab_colorNormal="@color/Mint"/>
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/size_button2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/size_option"
+                    app:fab_colorNormal="@color/BlueGreen"/>
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/size_button3"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/size_option"
+                    app:fab_colorNormal="@color/BlueGreen"/>
+
+            </com.github.clans.fab.FloatingActionMenu>
+
+
+            <com.github.clans.fab.FloatingActionMenu
+                android:id="@+id/color_menu"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@mipmap/color"
                 android:layout_toRightOf="@id/request_button"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="30dp"
-                android:background="@color/White"/>
+                android:src="@drawable/color_option"
+                app:menu_animationDelayPerItem="0"
+                app:menu_shadowColor="#444"
+                app:menu_colorNormal="#F0B7F7"
+                app:menu_colorPressed="#F2AB00"
+                app:menu_colorRipple="#D99200"
+                android:layout_alignBottom="@id/request_button">
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/color_button1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/color_option"
+                    app:fab_colorNormal="@color/Mint"/>
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/color_button2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/color_option"
+                    app:fab_colorNormal="@color/BlueGreen"/>
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/color_button3"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/color_option"
+                    app:fab_colorNormal="@color/BlueGreen"/>
+
+            </com.github.clans.fab.FloatingActionMenu>
 
         </RelativeLayout>
 
