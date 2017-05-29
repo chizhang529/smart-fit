@@ -1,6 +1,5 @@
 package edu.stanford.me202.smartfitting;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,29 +7,35 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Typeface;
-import android.icu.util.TimeUnit;
-import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.dd.CircularProgressButton;
-//import com.geniusforapp.fancydialog.FancyAlertDialog;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+//import com.geniusforapp.fancydialog.FancyAlertDialog;
+
 public class WelcomeActivity extends AppCompatActivity {
     private final static String BLETAG = "Bluetooth";
     private final static String TAG = WelcomeActivity.class.getSimpleName();
+
+    private static final String email = "jangwon90@gmail.com";
+    private static final String password = "12345678";
+
+    private FirebaseAuth mAuth;
 
     private BluetoothLEService bleService;
     private String bledata = "";
@@ -97,6 +102,8 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
 
+        mAuth = FirebaseAuth.getInstance();
+
 //        // remove title bar
 //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        // remove notification bar
@@ -145,8 +152,24 @@ public class WelcomeActivity extends AppCompatActivity {
                 bleService.connect(scannerID);
 
                 // TODO: Pesudo-click switch
-                Intent intent = new Intent(WelcomeActivity.this, ProductActivity.class);
-                startActivity(intent);
+
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(WelcomeActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "signInWithEmail:success");
+                                    Intent intent = new Intent(WelcomeActivity.this, ProductActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(WelcomeActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
         });
     }

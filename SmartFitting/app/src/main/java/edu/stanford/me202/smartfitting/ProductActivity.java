@@ -1,104 +1,153 @@
 package edu.stanford.me202.smartfitting;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ProductActivity extends AppCompatActivity {
 
-    private RecyclerView horizontal_recycler_view;
-    private ArrayList<String> horizontalList;
-    private HorizontalAdapter horizontalAdapter;
+    private final static String TAG = ProductActivity.class.getSimpleName();
+
+    private static final String rfid = "11111111";
+    private static final String room = "1";
+
+    private ArrayList<String> imageURLArray;
+    private ArrayList<String> imageKeyArray;
+    private HorizontalAdapter adapter;
+    private DatabaseReference mDatabase;
+
+    private Stock stock;
+    private Catalog catalog;
+    private String imageURL;
+
+    @BindView(R.id.horizontal_recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.product_image)
+    ImageView imageView;
+    @BindView(R.id.request_button)
+    Button requestButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
-        horizontal_recycler_view= (RecyclerView) findViewById(R.id.horizontal_recycler_view);
 
-        horizontalList=new ArrayList<>();
-        horizontalList.add("horizontal 1");
-        horizontalList.add("horizontal 2");
-        horizontalList.add("horizontal 3");
-        horizontalList.add("horizontal 4");
-        horizontalList.add("horizontal 5");
-        horizontalList.add("horizontal 6");
-        horizontalList.add("horizontal 7");
-        horizontalList.add("horizontal 8");
-        horizontalList.add("horizontal 9");
-        horizontalList.add("horizontal 10");
+        ButterKnife.bind(this);
 
+        imageURLArray = new ArrayList<>();
+        imageKeyArray = new ArrayList<>();
 
-        horizontalAdapter=new HorizontalAdapter(horizontalList);
-
-        LinearLayoutManager horizontalLayoutManagaer
-                = new LinearLayoutManager(ProductActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        horizontal_recycler_view.setLayoutManager(horizontalLayoutManagaer);
-
-        horizontal_recycler_view.setAdapter(horizontalAdapter);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
-    public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.MyViewHolder> {
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        private List<String> horizontalList;
+        LinearLayoutManager manager = new LinearLayoutManager(ProductActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(manager);
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            public TextView txtView;
-            public ImageView imageView;
+        adapter = new HorizontalAdapter(imageURLArray, this);
+        recyclerView.setAdapter(adapter);
 
-            public MyViewHolder(View view) {
-                super(view);
-                imageView = (ImageView) view.findViewById(R.id.imageView);
+        mDatabase.child("stockroom").child(rfid).addListenerForSingleValueEvent(readStockListener);
 
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomerRequest request = new CustomerRequest(room, stock.getCatalog(), stock.getColor(), stock.getSize(), imageURL);
+                mDatabase.child("request").push().setValue(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(ProductActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
-        }
-
-
-        public HorizontalAdapter(List<String> horizontalList) {
-            this.horizontalList = horizontalList;
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.content_scrolling, parent, false);
-
-            return new MyViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final MyViewHolder holder, final int position) {
-            if(position%3 == 0){
-                holder.imageView.setImageResource(R.drawable.item1);
-            }
-            else if(position%3 == 1){
-                holder.imageView.setImageResource(R.drawable.item2);
-            }
-            else{
-                holder.imageView.setImageResource(R.drawable.item3);
-            }
-//            holder.txtView.setText(horizontalList.get(position));
-//
-//            holder.txtView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(ScrollingActivity.this,holder.txtView.getText().toString(),Toast.LENGTH_SHORT).show();
-//                }
-//            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return horizontalList.size();
-        }
+        });
     }
+
+    ValueEventListener readStockListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            stock = dataSnapshot.getValue(Stock.class);
+            mDatabase.child("catalog").child(stock.getCatalog()).addValueEventListener(readCatalogListener);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "readStock:onCancelled", databaseError.toException());
+            // ...
+        }
+    };
+
+    ValueEventListener readCatalogListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            catalog = dataSnapshot.getValue(Catalog.class);
+            GenericTypeIndicator<List<String>> list = new GenericTypeIndicator<List<String>>() {};
+            catalog.setColors(dataSnapshot.child("color").getValue(list));
+            GenericTypeIndicator<Map<String, String>> map = new GenericTypeIndicator<Map<String, String>>() {};
+            catalog.setImageURLs(dataSnapshot.child("image").getValue(map));
+            imageURL = catalog.getImageURLs().get(stock.getColor());
+            Picasso.with(ProductActivity.this)
+                    .load(imageURL)
+                    .into(imageView);
+            mDatabase.child("recommendation").child(catalog.getType()).child(stock.getColor()).addValueEventListener(readRecommendationListener);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "readCatalog:onCancelled", databaseError.toException());
+            // ...
+        }
+    };
+
+    ValueEventListener readRecommendationListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            for (DataSnapshot recommendationSnapshot: dataSnapshot.getChildren()) {
+                if (!recommendationSnapshot.getKey().equals(stock.getKey())) {
+                    imageURLArray.add(recommendationSnapshot.getValue().toString());
+                    imageKeyArray.add(recommendationSnapshot.getKey());
+                }
+            }
+            adapter.data = imageURLArray;
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "readRecommendation:onCancelled", databaseError.toException());
+            // ...
+        }
+    };
 }

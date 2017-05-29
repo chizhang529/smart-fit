@@ -1,0 +1,143 @@
+{
+  "project_info": {
+    "project_number": "350856416970",
+    "firebase_url": "https://smartfittingroom-4f684.firebaseio.com",
+    "project_id": "smartfittingroom-4f684",
+    "storage_bucket": "smartfittingroom-4f684.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350856416970:android:1d852894fa00cd5e",
+        "android_client_info": {
+          "package_name": "com.example.jangwonsuh.imagerecommendation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "350856416970-80fmo1poccpjfh7eikk0bs9ae64qes8k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jangwonsuh.imagerecommendation",
+            "certificate_hash": "02ccabf0788ab660e01a6c54da0b793c099f1e09"
+          }
+        },
+        {
+          "client_id": "350856416970-jivbrdva109lrf0t4lgcp7dveabov4v7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbkqz4K_H7cvZ-9seQx7oJlfmwD2F-Dm4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "350856416970-jivbrdva109lrf0t4lgcp7dveabov4v7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350856416970:android:943ed284e883dcbb",
+        "android_client_info": {
+          "package_name": "com.example.jangwonsuh.smartfittingmerchant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "350856416970-p1prab4p3cuhckqb4bnc6igrp19a6j3b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jangwonsuh.smartfittingmerchant",
+            "certificate_hash": "02ccabf0788ab660e01a6c54da0b793c099f1e09"
+          }
+        },
+        {
+          "client_id": "350856416970-jivbrdva109lrf0t4lgcp7dveabov4v7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbkqz4K_H7cvZ-9seQx7oJlfmwD2F-Dm4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "350856416970-jivbrdva109lrf0t4lgcp7dveabov4v7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350856416970:android:f9c84239349422c9",
+        "android_client_info": {
+          "package_name": "edu.stanford.me202.smartfitting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "350856416970-4lf7e4p4o3lm5k1kml3qaa7lh8jbpu0e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.stanford.me202.smartfitting",
+            "certificate_hash": "02ccabf0788ab660e01a6c54da0b793c099f1e09"
+          }
+        },
+        {
+          "client_id": "350856416970-jivbrdva109lrf0t4lgcp7dveabov4v7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbkqz4K_H7cvZ-9seQx7oJlfmwD2F-Dm4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "350856416970-jivbrdva109lrf0t4lgcp7dveabov4v7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
