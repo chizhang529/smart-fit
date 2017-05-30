@@ -5,4 +5,7 @@
     <string name="uniqlo">U&#160;N&#160;I&#160;Q&#160;L&#160;O</string>
     <string name="scanreminder">Enjoy Your Smart Fitting!</string>
     <string name="scan">GET STARTED</string>
+
+    <string name="request">REQUEST</string>
+    <string name="recommendations">OUR RECOMMENDATIONS</string>
 </resources>

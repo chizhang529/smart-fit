@@ -13,7 +13,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4.2"
+            android:layout_weight="3.5"
             android:paddingTop="10dp"
             android:layout_gravity="center_vertical"
             android:background="@color/White"
@@ -22,9 +22,8 @@
             <ImageView
                 android:id="@+id/product_image"
                 android:layout_width="match_parent"
-                android:layout_height="620dp"
-                android:src="@drawable/shirt1"
-                android:padding="30dp"/>
+                android:layout_height="650dp"
+                android:padding="20dp"/>
 
             <Button
                 android:layout_below="@id/product_image"
@@ -34,8 +33,10 @@
                 android:background="@color/crimson"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="Request"
+                android:text="@string/request"
                 android:textSize="20dp"
+                android:textStyle="bold"
+                android:gravity="center"
                 android:textColor="@color/White"/>
 
             <com.github.clans.fab.FloatingActionMenu
@@ -44,33 +45,41 @@
                 android:layout_height="60dp"
                 android:layout_toLeftOf="@id/request_button"
                 android:layout_marginRight="30dp"
-                android:src="@drawable/size_option"
+                app:menu_icon="@drawable/ruler"
                 app:menu_animationDelayPerItem="0"
                 app:menu_shadowColor="#444"
-                app:menu_colorNormal="#FFB805"
-                app:menu_colorPressed="#F2AB00"
-                app:menu_colorRipple="#D99200"
+                app:menu_colorNormal="@color/White"
+                app:menu_colorPressed="@color/White"
+                app:menu_colorRipple="@color/White"
                 android:layout_alignBottom="@id/request_button">
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/size_button1"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/size_option"
-                    app:fab_colorNormal="@color/Mint"/>
+                    android:src="@drawable/small"
+                    app:fab_colorNormal="@color/BlueGreen"
+                    />
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/size_button2"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/size_option"
+                    android:src="@drawable/medium"
                     app:fab_colorNormal="@color/BlueGreen"/>
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/size_button3"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/size_option"
+                    android:src="@drawable/large"
+                    app:fab_colorNormal="@color/BlueGreen"/>
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/size_button4"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/xlarge"
                     app:fab_colorNormal="@color/BlueGreen"/>
 
             </com.github.clans.fab.FloatingActionMenu>
@@ -85,30 +94,28 @@
                 android:src="@drawable/color_option"
                 app:menu_animationDelayPerItem="0"
                 app:menu_shadowColor="#444"
-                app:menu_colorNormal="#F0B7F7"
-                app:menu_colorPressed="#F2AB00"
-                app:menu_colorRipple="#D99200"
+                app:menu_icon="@drawable/colorcircle"
+                app:menu_colorNormal="@color/White"
+                app:menu_colorPressed="@color/White"
+                app:menu_colorRipple="@color/White"
                 android:layout_alignBottom="@id/request_button">
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/color_button1"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/color_option"
-                    app:fab_colorNormal="@color/Mint"/>
+                    app:fab_colorNormal="#f9f9f9"/>
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/color_button2"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/color_option"
-                    app:fab_colorNormal="@color/BlueGreen"/>
+                    app:fab_colorNormal="#ff6f69"/>
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/color_button3"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/color_option"
                     app:fab_colorNormal="@color/BlueGreen"/>
 
             </com.github.clans.fab.FloatingActionMenu>
@@ -125,9 +132,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="OUR RECOMMENDATION"
+                android:text="@string/recommendations"
+                android:textColor="@android:color/black"
                 android:gravity="center"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:paddingBottom="5dp"/>
 
             <android.support.v7.widget.RecyclerView
@@ -138,7 +146,6 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:backgroundTint="@color/White"/>
-
 
         </LinearLayout>
 

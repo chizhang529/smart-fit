@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +51,10 @@ public class ProductActivity extends AppCompatActivity {
     ImageView imageView;
     @BindView(R.id.request_button)
     Button requestButton;
+    @BindView(R.id.color_button1)
+    FloatingActionButton color_button1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +125,9 @@ public class ProductActivity extends AppCompatActivity {
                     .load(imageURL)
                     .into(imageView);
             mDatabase.child("recommendation").child(catalog.getType()).child(stock.getColor()).addValueEventListener(readRecommendationListener);
+
+            color_button1.setColorNormalResId(R.color.Black);
+
         }
 
         @Override
