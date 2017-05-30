@@ -8,4 +8,6 @@
 
     <string name="request">REQUEST</string>
     <string name="recommendations">OUR RECOMMENDATIONS</string>
+
+    <string name="details">SEE DETAILS</string>
 </resources>

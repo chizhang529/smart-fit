@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -22,19 +23,30 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.My
 
     ArrayList<String> data;
     private Context ctx;
+    private ItemClickListener itemClickListener;
 
     public HorizontalAdapter(ArrayList<String> data, Context ctx) {
         this.data = data;
         this.ctx = ctx;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.imageView)
         public ImageView imageView;
 
         public MyViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (itemClickListener != null) itemClickListener.onClick(v, getAdapterPosition());
         }
     }
     @Override

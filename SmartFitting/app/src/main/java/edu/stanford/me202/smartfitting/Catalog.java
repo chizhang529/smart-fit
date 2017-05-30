@@ -1,5 +1,7 @@
 package edu.stanford.me202.smartfitting;
 
+import android.graphics.Color;
+
 import java.util.List;
 import java.util.Map;
 
@@ -63,5 +65,35 @@ public class Catalog {
 
     public void setImageURLs(Map<String, String> imageURLs) {
         this.imageURLs = imageURLs;
+    }
+
+    public int[] getColorCode() {
+        int[] colorCode = new int[colors.size()];
+        for (int i = 0; i < colors.size(); i++) {
+            String color = colors.get(i);
+            switch (color) {
+                case "white":
+                    colorCode[i] = Color.parseColor("#F9F9F9");
+                    break;
+                case "blue":
+                    colorCode[i] = Color.parseColor("#5BC0DE");
+                    break;
+                case "green":
+                    colorCode[i] = Color.parseColor("#5CB85C");
+                    break;
+                case "gray":
+                    colorCode[i] = Color.parseColor("#AFAFAF");
+                    break;
+                case "beige":
+                    colorCode[i] = Color.parseColor("#FFE39F");
+                    break;
+                case "pink":
+                    colorCode[i] = Color.parseColor("#FF6F69");
+                    break;
+                default:
+                    break;
+            }
+        }
+        return colorCode;
     }
 }
