@@ -16,5 +16,5 @@
     <string name="productNo">productnumber</string>
 
     <string name="requestconfirm">Request this item?</string>
-    <string name="scananother"><u>scan another one!</u></string>
+    <string name="scananother"><u>scan another Item</u></string>
 </resources>

@@ -84,7 +84,7 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
     @BindView(R.id.product_image)
     ImageView imageView;
     @BindView(R.id.scanAnother)
-    TextView scanAnother;
+    Button scanAnother;
     @BindView(R.id.request_button)
     Button requestButton;
     @BindView(R.id.text_product_name)
