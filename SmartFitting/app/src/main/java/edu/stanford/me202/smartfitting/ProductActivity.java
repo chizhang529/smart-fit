@@ -1,9 +1,11 @@
 package edu.stanford.me202.smartfitting;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,7 +43,7 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
 
     private final static String TAG = ProductActivity.class.getSimpleName();
 
-    private static final String rfid = "11111111";
+    private String rfid;
     private static final String room = "1";
     private static final String[] sizes = {"S","M","L","XL"};
 
@@ -89,6 +91,11 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
     FloatingActionButton sizeButton4;
     private ArrayList<FloatingActionButton> sizeButtonArray;
 
+    @BindView(R.id.sizeText)
+    TextView productSize;
+    @BindView(R.id.colorText)
+    TextView productColor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +103,10 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
 
         ButterKnife.bind(this);
 
+        // interpret rfid number passed in
         productNum = getIntent().getStringExtra(WelcomeActivity.PRODUCTNUM);
-        Toast.makeText(ProductActivity.this, "The product is" + productNum, Toast.LENGTH_SHORT).show();
+        rfid = new String(new char[8]).replace("\0", productNum);
+        Log.d(TAG, "RFID tag number is " + rfid);
 
         imageURLArray = new ArrayList<>();
         imageKeyArray = new ArrayList<>();
@@ -128,22 +137,47 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
         recyclerView.setAdapter(adapter);
 
         mDatabase.child("stockroom").child(rfid).addListenerForSingleValueEvent(readStockListener);
+        // TODO: update size and color of the product
+        // the vars you can use are productSize and productColor (TextViews)
+        // which have been declared and binded by ButterKnife
 
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomerRequest request = new CustomerRequest(room, stock.getCatalog(), stock.getColor(), stock.getSize(), imageURL);
-                mDatabase.child("request").push().setValue(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProductActivity.this);
+                builder.setTitle(R.string.requestconfirm);
+                builder.setIcon(R.drawable.request);
+                builder.setCancelable(false);
+                // TODO: show the user request confirm dialog
+                builder.setMessage("Do you want this\nproduct:XXXXXX\nsize:S\ncolor:white");
+
+                builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(ProductActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
-                        }
+                    public void onClick(DialogInterface dialog, int which) {
+                        // request via Firebase
+                        CustomerRequest request = new CustomerRequest(room, stock.getCatalog(), stock.getColor(), stock.getSize(), imageURL);
+                        mDatabase.child("request").push().setValue(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(ProductActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
-                });
+                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                }).show();
+
+
             }
         });
 
+        // TODO: when you click on the items of the menu
+        // you also need to update productColor
         colorMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,6 +202,8 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
             }
         });
 
+        // TODO: when you click on the items of the menu
+        // you also need to update productSize
         sizeMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -292,3 +328,5 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
         dialog.show();
     }
 }
+// TODO: The SEE DETAILS page layout still seems weird (mainly because of size)
+// if you have time, you can optimize it.

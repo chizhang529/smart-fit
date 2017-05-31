@@ -7,11 +7,32 @@
     android:minHeight="560dp"
     android:gravity="center">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="TEST"
+        android:gravity="center"
+        android:textSize="25sp"
+        android:textColor="@color/Black"
+        android:fontFamily="sans-serif"/>
+
     <ImageView
         android:id="@+id/image_dialog"
         android:layout_width="match_parent"
+        android:fitsSystemWindows="true"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="3"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="PRICE"
+        android:gravity="center"
+        android:textSize="50sp"
+        android:textColor="@color/Black"
+        android:textStyle="bold"/>
 
     <Button
         android:id="@+id/button_dialog_details"
@@ -21,7 +42,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/details"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
         android:textColor="@color/White"

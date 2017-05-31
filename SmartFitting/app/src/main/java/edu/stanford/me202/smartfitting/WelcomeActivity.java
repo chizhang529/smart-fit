@@ -32,14 +32,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-//import com.geniusforapp.fancydialog.FancyAlertDialog;
-/* TODO: 1. I changed activity_welcome
-   2. WelcomeActivity + dialog_rfid
-   3. ProductActivity take message
-   4. music
- */
-
-
 public class WelcomeActivity extends AppCompatActivity {
     private final static String BLETAG = "Bluetooth";
     private final static String TAG = WelcomeActivity.class.getSimpleName();
@@ -95,7 +87,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 Log.d(BLETAG, "Raw data: " + bledata);
 
                 scanDialog.dismiss();
-                scanButton.setProgress(0);
+                scanButton.setProgress(100);
 
                 // interpret product number and jump to product activity
                 mAuth.signInWithEmailAndPassword(email, password)
@@ -153,12 +145,14 @@ public class WelcomeActivity extends AppCompatActivity {
         welcomeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: COMMENT THIS PART TO DISABLE BLE
                 // connect to BLE once entering this activity
                 String scannerID = "D5:3C:ED:8E:F2:08";
                 // Initialize bluetooth service
                 bleService.initialize();
                 // Try to connect to bluetooth of this address
                 bleService.connect(scannerID);
+                // TODO: COMMENT THIS PART TO DISABLE BLE
             }
         });
 
@@ -172,12 +166,13 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 scanButton.setProgress(50);
 
-                //TODO: UNCOMMENT
+                // TODO: COMMENT THIS PART TO DISABLE BLE
                 // notify BLE to start
                 String string = "s";
                 byte[] b = string.getBytes();
                 bleService.writeRXCharacteristic(b);
                 Log.d(BLETAG, "Notified BLE connection status");
+                // TODO: COMMENT THIS PART TO DISABLE BLE
 
                 // show the dialog
                 scanDialog.setContentView(R.layout.dialog_rfid);
@@ -207,7 +202,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // TODO: UNCOMMENT
+        // TODO: COMMENT THIS PART TO DISABLE BLE
         /* Service start: this service will live and die with this activity; unless we
            control the lifecycle of this this by using startService(intent), stopService(intent)
          */
@@ -222,6 +217,7 @@ public class WelcomeActivity extends AppCompatActivity {
         // re-initialize the button and dismiss dialog
         scanDialog.dismiss();
         scanButton.setProgress(0);
+        // TODO: COMMENT THIS PART TO DISABLE BLE
     }
 
     @Override
