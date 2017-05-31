@@ -1,10 +1,19 @@
 package edu.stanford.me202.smartfitting;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,7 +50,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ProductActivity extends AppCompatActivity implements ItemClickListener {
-
+    private final static String BLETAG = "Bluetooth";
     private final static String TAG = ProductActivity.class.getSimpleName();
 
     private static final String room = "1";
@@ -57,10 +67,27 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
     private String imageURL;
     private String productNum;
 
+    // TODO: BLE TEST
+    private Dialog scanDialog;
+    private TextView scandialog_hint1;
+    private TextView scandialog_hint2;
+    private Button laterBtn;
+
+    private Typeface ralewaylight;
+    private Typeface ralewaysemibold;
+
+    private BluetoothLEService bleService;
+    private String bledata = "";
+    // TODO: BLE TEST
+
     @BindView(R.id.horizontal_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.product_image)
     ImageView imageView;
+    // TODO: BLE TEST
+    @BindView(R.id.scanAnother)
+    TextView scanAnother;
+    // TODO: BLE TEST
     @BindView(R.id.request_button)
     Button requestButton;
     @BindView(R.id.text_product_name)
@@ -95,17 +122,79 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
     @BindView(R.id.colorText)
     TextView productColor;
 
+    // TODO: BLE TEST
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            BluetoothLEService.LocalBinder binder = (BluetoothLEService.LocalBinder)service;
+            bleService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            bleService = null;
+        }
+    };
+
+    public BroadcastReceiver BluetoothReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(bleService.ACTION_DATA_AVAILABLE)){
+                // get data from BLE module
+                bledata = intent.getStringExtra(bleService.EXTRA_DATA);
+                Log.d(BLETAG, "Raw data: " + bledata);
+
+                // dismiss dialog
+                scanDialog.dismiss();
+
+                if (bledata.equals("e")){
+                    // unbind BLE Service
+                    LocalBroadcastManager.getInstance(ProductActivity.this).unregisterReceiver(BluetoothReceiver);
+                    unbindService(mServiceConnection);
+                    bleService = null;
+
+                    // go back to welcome activity
+                    Intent intent1 = new Intent(ProductActivity.this, WelcomeActivity.class);
+                    startActivity(intent1);
+                } else {
+                    Log.d(BLETAG, "Refreshing page with data: " + bledata);
+                    rfid = new String(new char[8]).replace("\0", bledata);
+                    mDatabase.child("stockroom").child(rfid).addListenerForSingleValueEvent(readStockListener);
+                }
+            }
+
+            // Bluetooth Connected
+            if (intent.getAction().equals(bleService.ACTION_GATT_CONNECTED)){
+                Log.d(BLETAG, "Bluetooth Service is connected");
+            }
+
+            // Bluetooth Disconnected
+            if (intent.getAction().equals(bleService.ACTION_GATT_DISCONNECTED)){
+                Log.d(BLETAG, "Bluetooth Service is disconnected");
+            }
+
+        }
+    };
+    // TODO: BLE TEST
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
-
         ButterKnife.bind(this);
+
+        // TODO: BLE TEST
+        ralewaylight = Typeface.createFromAsset(getAssets(), "fonts/ralewaylight.ttf");
+        ralewaysemibold = Typeface.createFromAsset(getAssets(), "fonts/ralewaysemibold.ttf");
+        scanDialog = new Dialog(ProductActivity.this);
+        // TODO: BLE TEST
 
         // interpret rfid number passed in
         productNum = getIntent().getStringExtra(WelcomeActivity.PRODUCTNUM);
+        Log.d(TAG, "IntentExtra from WelcomeActivity: " + productNum);
         rfid = new String(new char[8]).replace("\0", productNum);
-        Log.d(TAG, "RFID tag number is " + rfid);
+        Log.d(TAG, "RFID tag number is now " + rfid);
 
         imageURLArray = new ArrayList<>();
         imageKeyArray = new ArrayList<>();
@@ -128,6 +217,20 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
     protected void onResume() {
         super.onResume();
 
+        // TODO: BLE TEST (outside OnClickListener)
+        /* Service start: this service will live and die with this activity; unless we
+           control the lifecycle of this this by using startService(intent), stopService(intent)
+         */
+        Intent intent = new Intent(ProductActivity.this,BluetoothLEService.class);
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        IntentFilter filter = new IntentFilter(bleService.ACTION_DATA_AVAILABLE);
+        filter.addAction(bleService.ACTION_GATT_CONNECTED );
+        filter.addAction(bleService.ACTION_GATT_DISCONNECTED );
+
+        LocalBroadcastManager.getInstance(ProductActivity.this).registerReceiver(BluetoothReceiver,filter);
+        // TODO: BLE TEST (outside OnClickListener)
+
         LinearLayoutManager manager = new LinearLayoutManager(ProductActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(manager);
 
@@ -136,9 +239,47 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
         recyclerView.setAdapter(adapter);
 
         mDatabase.child("stockroom").child(rfid).addListenerForSingleValueEvent(readStockListener);
-        // TODO: update size and color of the product
-        // the vars you can use are productSize and productColor (TextViews)
-        // which have been declared and binded by ButterKnife
+
+        scanAnother.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // TODO: BLE TEST
+                // connect to BLE once entering this activity
+                String scannerID = "D5:3C:ED:8E:F2:08";
+                // Initialize bluetooth service
+                bleService.initialize();
+                // Try to connect to bluetooth of this address
+                bleService.connect(scannerID);
+
+                // send flag
+                String string = "s";
+                byte[] b = string.getBytes();
+                bleService.writeRXCharacteristic(b);
+                Log.d(BLETAG, "Sent letter S flag");
+
+                // show the dialog
+                scanDialog.setContentView(R.layout.dialog_rfid);
+                scanDialog.setCancelable(false);
+                scanDialog.show();
+                Window window = scanDialog.getWindow();
+                window.setLayout(450, 450);
+                // set font for texts
+                scandialog_hint1 = (TextView) scanDialog.findViewById(R.id.scandialog_hint1);
+                scandialog_hint2 = (TextView) scanDialog.findViewById(R.id.scandialog_hint2);
+                scandialog_hint1.setTypeface(ralewaysemibold);
+                scandialog_hint2.setTypeface(ralewaylight);
+                // set button for later scanning
+                laterBtn = (Button) scanDialog.findViewById(R.id.laterBtn);
+                laterBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scanDialog.dismiss();
+                    }
+                });
+                // TODO: BLE TEST
+            }
+        });
 
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +288,7 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
                 builder.setTitle(R.string.requestconfirm);
                 builder.setIcon(R.drawable.request);
                 builder.setCancelable(false);
-                // TODO: show the user request confirm dialog
+                // show customers their request confirmation
                 builder.setMessage(catalog.getName() + "\nSize: " + stock.getSize() + "\nColor: " + stock.getColor());
 
                 builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {

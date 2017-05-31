@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:background="@android:color/white"
+        android:background="@color/transparent"
         android:text="LATER"
         android:textSize="20sp"
         android:textColor="@color/crimson"/>

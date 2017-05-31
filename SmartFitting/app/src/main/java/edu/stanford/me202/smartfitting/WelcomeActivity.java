@@ -83,14 +83,29 @@ public class WelcomeActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(bleService.ACTION_DATA_AVAILABLE)){
                 // get data from BLE module
-                bledata += intent.getStringExtra(bleService.EXTRA_DATA);
+                bledata = intent.getStringExtra(bleService.EXTRA_DATA);
                 Log.d(BLETAG, "Raw data: " + bledata);
 
-                scanDialog.dismiss();
-                scanButton.setProgress(100);
+                // TODO: decisions when receiving data
+                if (bledata.equals("e")) {
+                    // first disconnect BLE Service
+                    bleService.disconnect();
 
-                // interpret product number and jump to product activity
-                if (mAuth.getCurrentUser() == null) {
+                    if (scanButton.getProgress() != 0) {
+                        scanDialog.dismiss();
+                        scanButton.setProgress(-1);
+                        scanButton.setProgress(0);
+                    }
+                } else {
+                    scanDialog.dismiss();
+                    scanButton.setProgress(100);
+
+                    // unbind BLE Service
+                    LocalBroadcastManager.getInstance(WelcomeActivity.this).unregisterReceiver(BluetoothReceiver);
+                    unbindService(mServiceConnection);
+                    bleService = null;
+
+                    // interpret product number and jump to product activity
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(WelcomeActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -98,11 +113,10 @@ public class WelcomeActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "signInWithEmail:success");
-                                        Intent i = new Intent(WelcomeActivity.this, ProductActivity.class);
-                                        i.putExtra(PRODUCTNUM, bledata);
-                                        // clear variable for next data reading
-                                        bledata = "";
-                                        startActivity(i);
+                                        Intent intent = new Intent(WelcomeActivity.this, ProductActivity.class);
+                                        Log.d(TAG, "Sending IntentExtra [" + bledata + "] to ProductActivity!");
+                                        intent.putExtra(PRODUCTNUM, bledata);
+                                        startActivity(intent);
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -111,14 +125,10 @@ public class WelcomeActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-                } else {
-                    Intent i = new Intent(WelcomeActivity.this, ProductActivity.class);
-                    i.putExtra(PRODUCTNUM, bledata);
-                    // clear variable for next data reading
-                    bledata = "";
-                    startActivity(i);
+
                 }
             }
+            // TODO: decisions when receiving data
 
             // Bluetooth Connected
             if (intent.getAction().equals(bleService.ACTION_GATT_CONNECTED)){
@@ -152,14 +162,12 @@ public class WelcomeActivity extends AppCompatActivity {
         welcomeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: COMMENT THIS PART TO DISABLE BLE
                 // connect to BLE once entering this activity
                 String scannerID = "D5:3C:ED:8E:F2:08";
                 // Initialize bluetooth service
                 bleService.initialize();
                 // Try to connect to bluetooth of this address
                 bleService.connect(scannerID);
-                // TODO: COMMENT THIS PART TO DISABLE BLE
             }
         });
 
@@ -173,13 +181,14 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 scanButton.setProgress(50);
 
-                // TODO: COMMENT THIS PART TO DISABLE BLE
-                // notify BLE to start
-                String string = "s";
-                byte[] b = string.getBytes();
-                bleService.writeRXCharacteristic(b);
-                Log.d(BLETAG, "Notified BLE connection status");
-                // TODO: COMMENT THIS PART TO DISABLE BLE
+                // TODO: CONNECT BLE WHEN PRESSING START but No s TO SEND
+                // connect to BLE once entering this activity
+                String scannerID = "D5:3C:ED:8E:F2:08";
+                // Initialize bluetooth service
+                bleService.initialize();
+                // Try to connect to bluetooth of this address
+                bleService.connect(scannerID);
+                // TODO: CONNECT BLE WHEN PRESSING START
 
                 // show the dialog
                 scanDialog.setContentView(R.layout.dialog_rfid);
@@ -227,16 +236,16 @@ public class WelcomeActivity extends AppCompatActivity {
         // TODO: COMMENT THIS PART TO DISABLE BLE
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(BluetoothReceiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(mServiceConnection);
-        bleService = null;
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(BluetoothReceiver);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        unbindService(mServiceConnection);
+//        bleService = null;
+//    }
 }

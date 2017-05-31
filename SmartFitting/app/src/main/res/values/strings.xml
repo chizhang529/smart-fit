@@ -12,8 +12,9 @@
     <string name="details">SEE DETAILS</string>
 
     <string name="scanhint1">SCAN YOUR TAG</string>
-    <string name="scanhint2">to get better experience!</string>
+    <string name="scanhint2">when blue LEDs are blinking!</string>
     <string name="productNo">productnumber</string>
 
     <string name="requestconfirm">Request this item?</string>
+    <string name="scananother"><u>Scan another one!</u></string>
 </resources>
