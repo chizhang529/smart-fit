@@ -3,6 +3,7 @@ package com.example.jangwonsuh.smartfittingmerchant;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -84,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
             }
             if(data.size() > adapter.data.size()) {
                 Toast.makeText(MainActivity.this, getString(R.string.toast_main_new_request), Toast.LENGTH_SHORT).show();
+                // notification sound
+                MediaPlayer notification = MediaPlayer.create(MainActivity.this, R.raw.notification);
+                notification.start();
+                // vibration feedback
                 vibrator.vibrate(400);
             }
             adapter.data = data;

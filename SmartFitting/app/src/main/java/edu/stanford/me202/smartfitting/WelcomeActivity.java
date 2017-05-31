@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -86,7 +87,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 bledata = intent.getStringExtra(bleService.EXTRA_DATA);
                 Log.d(BLETAG, "Raw data: " + bledata);
 
-                // TODO: decisions when receiving data
                 if (bledata.equals("e")) {
                     // first disconnect BLE Service
                     bleService.disconnect();
@@ -97,6 +97,10 @@ public class WelcomeActivity extends AppCompatActivity {
                         scanButton.setProgress(0);
                     }
                 } else {
+                    // audio feedback for successful RFID scan
+                    MediaPlayer rfidBeep = MediaPlayer.create(WelcomeActivity.this, R.raw.beep);
+                    rfidBeep.start();
+
                     scanDialog.dismiss();
                     scanButton.setProgress(100);
 
@@ -128,7 +132,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 }
             }
-            // TODO: decisions when receiving data
 
             // Bluetooth Connected
             if (intent.getAction().equals(bleService.ACTION_GATT_CONNECTED)){
@@ -181,14 +184,12 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 scanButton.setProgress(50);
 
-                // TODO: CONNECT BLE WHEN PRESSING START but No s TO SEND
                 // connect to BLE once entering this activity
                 String scannerID = "D5:3C:ED:8E:F2:08";
                 // Initialize bluetooth service
                 bleService.initialize();
                 // Try to connect to bluetooth of this address
                 bleService.connect(scannerID);
-                // TODO: CONNECT BLE WHEN PRESSING START
 
                 // show the dialog
                 scanDialog.setContentView(R.layout.dialog_rfid);
@@ -218,7 +219,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // TODO: COMMENT THIS PART TO DISABLE BLE
+        // configure BLE
         /* Service start: this service will live and die with this activity; unless we
            control the lifecycle of this this by using startService(intent), stopService(intent)
          */
@@ -233,19 +234,6 @@ public class WelcomeActivity extends AppCompatActivity {
         // re-initialize the button and dismiss dialog
         scanDialog.dismiss();
         scanButton.setProgress(0);
-        // TODO: COMMENT THIS PART TO DISABLE BLE
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(BluetoothReceiver);
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        unbindService(mServiceConnection);
-//        bleService = null;
-//    }
 }
