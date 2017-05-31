@@ -10,38 +10,38 @@
         android:clipChildren="false"
         tools:context="edu.stanford.me202.smartfitting.ProductActivity">
     
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
-        
-        <TextView
-            android:id="@+id/text_product_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:id="@+id/text_product_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"/>
-        
-    </LinearLayout>
-    
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3.5"
-            android:paddingTop="10dp"
+            android:paddingTop="40dp"
             android:layout_gravity="center_vertical"
             android:background="@color/White"
             android:clipChildren="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/text_product_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/text_product_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"/>
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/product_image"
@@ -195,7 +195,6 @@
                     android:textColor="@android:color/black"
                     android:gravity="center"
                     android:textSize="20sp"
-                    android:textStyle="bold"
                     android:paddingBottom="5dp"/>
 
             </LinearLayout>

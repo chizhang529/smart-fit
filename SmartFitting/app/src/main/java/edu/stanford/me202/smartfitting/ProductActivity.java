@@ -43,7 +43,6 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
 
     private final static String TAG = ProductActivity.class.getSimpleName();
 
-    private String rfid;
     private static final String room = "1";
     private static final String[] sizes = {"S","M","L","XL"};
 
@@ -52,10 +51,10 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
     private HorizontalAdapter adapter;
     private DatabaseReference mDatabase;
 
+    private String rfid;
     private Stock stock;
     private Catalog catalog;
     private String imageURL;
-
     private String productNum;
 
     @BindView(R.id.horizontal_recycler_view)
@@ -149,7 +148,7 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
                 builder.setIcon(R.drawable.request);
                 builder.setCancelable(false);
                 // TODO: show the user request confirm dialog
-                builder.setMessage("Do you want this\nproduct:XXXXXX\nsize:S\ncolor:white");
+                builder.setMessage(catalog.getName() + "\nSize: " + stock.getSize() + "\nColor: " + stock.getColor());
 
                 builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                     @Override
@@ -223,6 +222,8 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             stock = dataSnapshot.getValue(Stock.class);
+            productSize.setText(stock.getSize());
+            productColor.setText(stock.getColor());
             mDatabase.child("catalog").child(stock.getCatalog()).addListenerForSingleValueEvent(readCatalogListener);
 
             for (int i = 0; i < sizeButtonArray.size(); i++) {
@@ -231,7 +232,9 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
                     @Override
                     public void onClick(View v) {
                         sizeMenu.close(true);
-                        stock.setSize(sizes[n]);
+                        String size = sizes[n];
+                        stock.setSize(size);
+                        productSize.setText(size);
                     }
                 });
             }
@@ -266,7 +269,9 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
                     @Override
                     public void onClick(View v) {
                         colorMenu.close(true);
-                        stock.setColor(catalog.getColors().get(n));
+                        String color = catalog.getColors().get(n);
+                        stock.setColor(color);
+                        productColor.setText(color);
                         mDatabase.child("recommendation").child(catalog.getType()).child(stock.getColor()).addListenerForSingleValueEvent(readRecommendationListener);
                     }
                 });
@@ -312,10 +317,29 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
     public void onClick(View view, final int position) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog);
+
         ImageView imagePreview = (ImageView) dialog.findViewById(R.id.image_dialog);
         Picasso.with(this)
                 .load(imageURLArray.get(position))
                 .into(imagePreview);
+
+        Stock selected = new Stock(imageKeyArray.get(position), stock.getSize());
+        mDatabase.child("catalog").child(selected.getCatalog()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Catalog selectedCatalog = dataSnapshot.getValue(Catalog.class);
+                TextView productName = (TextView) dialog.findViewById(R.id.text_dialog_name);
+                productName.setText(selectedCatalog.getName());
+                TextView productPrice = (TextView) dialog.findViewById(R.id.text_dialog_price);
+                productPrice.setText("$" + String.format("%.2f", selectedCatalog.getPrice()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "seeDetail:onCancelled", databaseError.toException());
+            }
+        });
+
         Button detailsButton = (Button) dialog.findViewById(R.id.button_dialog_details);
         detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override

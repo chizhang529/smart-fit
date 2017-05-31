@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SmartFittingMerchant</string>
+    <string name="text_size">Size:\u0020</string>
+    <string name="text_color">Color:\u0020</string>
+
+    <string name="dialog_main_delete_message">Delete request?</string>
+    <string name="button_dialog_accept">Accept</string>
+    <string name="button_dialog_cancel">Cancel</string>
+    <string name="text_progress_wait">Please wait</string>
+    <string name="text_progress_deleting">Deleting request...</string>
+    <string name="toast_main_deleted">Request deleted.</string>
+    <string name="toast_main_delete_failed">Failed to delete request. Please try again.</string>
+    <string name="toast_main_new_request">New request!</string>
+</resources>

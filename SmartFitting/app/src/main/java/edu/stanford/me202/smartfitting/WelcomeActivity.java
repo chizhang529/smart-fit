@@ -90,27 +90,34 @@ public class WelcomeActivity extends AppCompatActivity {
                 scanButton.setProgress(100);
 
                 // interpret product number and jump to product activity
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(WelcomeActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "signInWithEmail:success");
-                                    Intent intent = new Intent(WelcomeActivity.this, ProductActivity.class);
-                                    intent.putExtra(PRODUCTNUM, bledata);
-                                    // clear variable for next data reading
-                                    bledata = "";
-                                    startActivity(intent);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(WelcomeActivity.this, "Authentication failed",
-                                            Toast.LENGTH_SHORT).show();
+                if (mAuth.getCurrentUser() == null) {
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(WelcomeActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "signInWithEmail:success");
+                                        Intent i = new Intent(WelcomeActivity.this, ProductActivity.class);
+                                        i.putExtra(PRODUCTNUM, bledata);
+                                        // clear variable for next data reading
+                                        bledata = "";
+                                        startActivity(i);
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                        Toast.makeText(WelcomeActivity.this, "Authentication failed",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
-
+                            });
+                } else {
+                    Intent i = new Intent(WelcomeActivity.this, ProductActivity.class);
+                    i.putExtra(PRODUCTNUM, bledata);
+                    // clear variable for next data reading
+                    bledata = "";
+                    startActivity(i);
+                }
             }
 
             // Bluetooth Connected
