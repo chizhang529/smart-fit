@@ -8,7 +8,8 @@
     android:padding="20dp"
     android:background="@android:color/white"
     android:orientation="vertical"
-
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context="edu.stanford.me202.smartfitting.WelcomeActivity">
 
     <TextView

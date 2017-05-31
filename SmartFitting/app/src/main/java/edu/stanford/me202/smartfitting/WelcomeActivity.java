@@ -1,8 +1,10 @@
 package edu.stanford.me202.smartfitting;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -11,9 +13,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,10 +33,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 //import com.geniusforapp.fancydialog.FancyAlertDialog;
+/* TODO: 1. I changed activity_welcome
+   2. WelcomeActivity + dialog_rfid
+   3. ProductActivity take message
+   4. music
+ */
+
 
 public class WelcomeActivity extends AppCompatActivity {
     private final static String BLETAG = "Bluetooth";
     private final static String TAG = WelcomeActivity.class.getSimpleName();
+    public final static String PRODUCTNUM = "productNum";
 
     private static final String email = "jangwon90@gmail.com";
     private static final String password = "12345678";
@@ -40,6 +53,15 @@ public class WelcomeActivity extends AppCompatActivity {
     private BluetoothLEService bleService;
     private String bledata = "";
 
+    private TextView scandialog_hint1;
+    private TextView scandialog_hint2;
+    private Button laterBtn;
+
+    private Typeface ralewaylight;
+    private Typeface ralewaysemibold;
+
+    private Dialog scanDialog;
+
     @BindView(R.id.welcometext)
     TextView welcomeText;
     @BindView(R.id.uniqlotext)
@@ -48,6 +70,7 @@ public class WelcomeActivity extends AppCompatActivity {
     TextView enjoyText;
     @BindView(R.id.scanButton)
     CircularProgressButton scanButton;
+
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -67,30 +90,45 @@ public class WelcomeActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(bleService.ACTION_DATA_AVAILABLE)){
+                // get data from BLE module
                 bledata += intent.getStringExtra(bleService.EXTRA_DATA);
+                Log.d(BLETAG, "Raw data: " + bledata);
 
-                if (bledata.endsWith("@")) {
-                    Log.d(BLETAG, "Raw data: " + bledata);
-                    String delim = "@";
-                    String dataInfo = bledata.split(delim)[0];
+                scanDialog.dismiss();
+                scanButton.setProgress(0);
 
-                    // reset data string
-                    bledata = "";
-                }
+                // interpret product number and jump to product activity
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(WelcomeActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "signInWithEmail:success");
+                                    Intent intent = new Intent(WelcomeActivity.this, ProductActivity.class);
+                                    intent.putExtra(PRODUCTNUM, bledata);
+                                    // clear variable for next data reading
+                                    bledata = "";
+                                    startActivity(intent);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(WelcomeActivity.this, "Authentication failed",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
             }
 
             // Bluetooth Connected
             if (intent.getAction().equals(bleService.ACTION_GATT_CONNECTED)){
-                // TODO: if needed, tell Arduino that BLE is connected
-                Log.d(BLETAG, "CONNECTED");
-                String string = "Good check: connected!";
-                byte[] b = string.getBytes();
-                bleService.writeRXCharacteristic(b);
+                Log.d(BLETAG, "Bluetooth Service is connected");
             }
 
             // Bluetooth Disconnected
             if (intent.getAction().equals(bleService.ACTION_GATT_DISCONNECTED)){
-
+                Log.d(BLETAG, "Bluetooth Service is disconnected");
             }
 
         }
@@ -101,75 +139,67 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
-
+        // get an instance for Firebase
         mAuth = FirebaseAuth.getInstance();
 
-//        // remove title bar
-//        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        // remove notification bar
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        // set content view AFTER above sequence (to avoid crash)
-//        this.setContentView(R.layout.activity_welcome);
-
         // display welcome text
-        Typeface ralewaylight = Typeface.createFromAsset(getAssets(), "fonts/ralewaylight.ttf");
-        Typeface ralewaysemibold = Typeface.createFromAsset(getAssets(), "fonts/ralewaysemibold.ttf");
+        ralewaylight = Typeface.createFromAsset(getAssets(), "fonts/ralewaylight.ttf");
+        ralewaysemibold = Typeface.createFromAsset(getAssets(), "fonts/ralewaysemibold.ttf");
         welcomeText.setTypeface(ralewaylight);
         uniqloText.setTypeface(ralewaysemibold);
         enjoyText.setTypeface(ralewaylight);
 
-        scanButton.setIndeterminateProgressMode(true);
-        scanButton.setOnClickListener(new View.OnClickListener() {
+        // set welcomeText for connecting BLE before sending data
+        welcomeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanButton.setProgress(50);
-//                FancyAlertDialog.Builder alert = new FancyAlertDialog.Builder(WelcomeActivity.this)
-//                        //.setImageRecourse(R.drawable.success)
-//                        .setTextTitle("scan your tag")
-//                        .setTitleFont("fonts/ralewaysemibold.ttf")
-//                        .setTextSubTitle("please let us know what you are trying on")
-//                        .setSubTitleFont("fonts/ralewaylight.ttf")
-//                        .setNegativeButtonText("LATER")
-//                        .setNegativeColor(R.color.crimson)
-//                        .setOnNegativeClicked(new FancyAlertDialog.OnNegativeClicked() {
-//                            @Override
-//                            public void OnClick(View view, Dialog dialog) {
-//                            dialog.dismiss();
-//                            scanButton.setProgress(0);
-//
-//                            String string = "Good check again!";
-//                            byte[] b = string.getBytes();
-//                            bleService.writeRXCharacteristic(b);
-//                            }
-//                        })
-//                        .build();
-//                alert.show();
-
+                // connect to BLE once entering this activity
                 String scannerID = "D5:3C:ED:8E:F2:08";
                 // Initialize bluetooth service
                 bleService.initialize();
                 // Try to connect to bluetooth of this address
                 bleService.connect(scannerID);
+            }
+        });
 
-                // TODO: Pesudo-click switch
+        scanDialog = new Dialog(WelcomeActivity.this);
 
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(WelcomeActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "signInWithEmail:success");
-                                    Intent intent = new Intent(WelcomeActivity.this, ProductActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(WelcomeActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+        // set up scanButton functionality
+        scanButton.setProgress(0);
+        scanButton.setIndeterminateProgressMode(true);
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanButton.setProgress(50);
+
+                //TODO: UNCOMMENT
+                // notify BLE to start
+                String string = "s";
+                byte[] b = string.getBytes();
+                bleService.writeRXCharacteristic(b);
+                Log.d(BLETAG, "Notified BLE connection status");
+
+                // show the dialog
+                scanDialog.setContentView(R.layout.dialog_rfid);
+                scanDialog.setCancelable(false);
+                scanDialog.show();
+                Window window = scanDialog.getWindow();
+                window.setLayout(450, 450);
+                // set font for texts
+                scandialog_hint1 = (TextView) scanDialog.findViewById(R.id.scandialog_hint1);
+                scandialog_hint2 = (TextView) scanDialog.findViewById(R.id.scandialog_hint2);
+                scandialog_hint1.setTypeface(ralewaysemibold);
+                scandialog_hint2.setTypeface(ralewaylight);
+                // set button for later scanning
+                laterBtn = (Button) scanDialog.findViewById(R.id.laterBtn);
+                laterBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scanDialog.dismiss();
+                        scanButton.setProgress(0);
+                    }
+                });
+
             }
         });
     }
@@ -177,6 +207,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // TODO: UNCOMMENT
         /* Service start: this service will live and die with this activity; unless we
            control the lifecycle of this this by using startService(intent), stopService(intent)
          */
@@ -188,6 +219,9 @@ public class WelcomeActivity extends AppCompatActivity {
         filter.addAction(bleService.ACTION_GATT_DISCONNECTED );
 
         LocalBroadcastManager.getInstance(this).registerReceiver(BluetoothReceiver,filter);
+        // re-initialize the button and dismiss dialog
+        scanDialog.dismiss();
+        scanButton.setProgress(0);
     }
 
     @Override

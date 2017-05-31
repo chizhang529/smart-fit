@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/dialog_rfid_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="20dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:src="@drawable/rfid"/>
+
+    <TextView
+        android:id="@+id/scandialog_hint1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:text="@string/scanhint1"/>
+    
+    <TextView
+        android:id="@+id/scandialog_hint2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:text="@string/scanhint2"/>
+
+    <Button
+        android:id="@+id/laterBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/white"
+        android:text="LATER"
+        android:textSize="20sp"
+        android:textColor="@color/crimson"/>
+
+</LinearLayout>

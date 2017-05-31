@@ -54,6 +54,8 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
     private Catalog catalog;
     private String imageURL;
 
+    private String productNum;
+
     @BindView(R.id.horizontal_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.product_image)
@@ -94,6 +96,9 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
 
         ButterKnife.bind(this);
 
+        productNum = getIntent().getStringExtra(WelcomeActivity.PRODUCTNUM);
+        Toast.makeText(ProductActivity.this, "The product is" + productNum, Toast.LENGTH_SHORT).show();
+
         imageURLArray = new ArrayList<>();
         imageKeyArray = new ArrayList<>();
 
@@ -123,7 +128,7 @@ public class ProductActivity extends AppCompatActivity implements ItemClickListe
         recyclerView.setAdapter(adapter);
 
         mDatabase.child("stockroom").child(rfid).addListenerForSingleValueEvent(readStockListener);
-        
+
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -7,7 +7,11 @@
     <string name="scan">GET STARTED</string>
 
     <string name="request">REQUEST</string>
-    <string name="recommendations">OUR RECOMMENDATIONS</string>
+    <string name="recommendations">You may also like&#8230;</string>
 
     <string name="details">SEE DETAILS</string>
+
+    <string name="scanhint1">SCAN YOUR TAG</string>
+    <string name="scanhint2">to get better experience!</string>
+    <string name="productNo">productnumber</string>
 </resources>
