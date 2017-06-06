@@ -3,12 +3,12 @@ Smart Fit is a IoT product designed and built by [Chi Zhang](https://www.linkedi
 
 :warning: this page serves as software description, please refer to the project [website](http://me202smartfit.weebly.com/) for more details on mechanical and eletrical systems design.
 
-## Requirements <img src="https://lh6.ggpht.com/ydol6v1uv6PCQdVZU3D0HucU6fqbYbQctmOqkwJ56QD65h3OaNam5cELB3FgnZpMCII=w300" width="50" height="50" />
-### <img src="https://img.clippp.com/6b0c1fedd5eee052a5776c3f5e921f34_android-logo-logotype-all-logos-emblems-brands-pictures-gallery-android-logo_5100-1180.png" width="80" height="20" />
+## Requirements <img src="./pics/anduino.png" width="50" height="50" />
+### <img src="./pics/android.png" width="80" height="20" />
 - [Android 6.0 Marshmallow](https://www.android.com/versions/marshmallow-6-0/) with API 23
 - [Android SDK 25.3.0](https://developer.android.com/studio/releases/sdk-tools.html)
 - [Android Bluetooth Low Energy Service](https://developer.android.com/guide/topics/connectivity/bluetooth-le.html)
-### <img src="https://www.arduino.cc/arduino_logo.png" width="60" height="40" />
+### <img src="./pics/arduino.png" width="60" height="40" />
 - [Arduino 1.69](https://www.arduino.cc/) with ES Framework by [J. Edward Carryer](https://profiles.stanford.edu/j-edward-carryer)
 ### Third-party Services and Libraries
 - [Google Firebase](https://firebase.google.com/)
@@ -64,12 +64,14 @@ repositories {
     }
 ```
 
-## Android Workflow
+## Android App Workflow
 
-## Android GIF Demo
-![customer](http://www.reactiongifs.us/wp-content/uploads/2013/10/nuh_uh_conan_obrien.gif)
-![merchant](http://www.reactiongifs.us/wp-content/uploads/2013/10/nuh_uh_conan_obrien.gif)
+## Android App GIF Demo
+Fitting Room App           |    Merchant App
+:-------------------------:|:-------------------------:
+<img src="./pics/FittingRoomSide.gif" width="350" height="600" />  |  <img src="./pics/MerchantSide.gif" width="350" height="600" />
+
 ## Arduino State Machine
 
 ## Copyright :copyright:
-
+All trademarks and clothes photoes in the app are owned by Uniqlo Co., Ltd. The use of the copyrighted work involved in this project is for educational purposes, and should be considered fair use.
