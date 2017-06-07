@@ -1,7 +1,7 @@
-# Smart Fit: Smart Fitting Room Assistance System
+# Smart Fit
 Smart Fit is a IoT product designed and built by [Chi Zhang](https://www.linkedin.com/in/zhang-chi/), [Jiajie He](https://www.linkedin.com/in/jiajie-he/), [Jang Won Suh](https://www.linkedin.com/in/jang-won-suh-371123b8/) and [Supanath Juthacharoenwong](https://www.linkedin.com/in/supanath-juthacharoenwong-02754353/). It is also a team project for Mechaphonics: Smart Phone-Enabled Mechatronic Systems[(ME202)](http://explorecourses.stanford.edu/search?view=catalog&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q=Mechaphonics&collapse=) at Stanford University, Spring 2017.
 
-:warning: this page serves as software description, please refer to the project [website](http://me202smartfit.weebly.com/) for more details on mechanical and eletrical systems design.
+:warning: This page serves as software description, please refer to the project [website](http://me202smartfit.weebly.com/) for more details on mechanical and eletrical systems setup.
 
 ## Requirements <img src="./pics/anduino.png" width="50" height="50" />
 ### <img src="./pics/android.png" width="80" height="20" />
@@ -10,6 +10,7 @@ Smart Fit is a IoT product designed and built by [Chi Zhang](https://www.linkedi
 - [Android Bluetooth Low Energy Service](https://developer.android.com/guide/topics/connectivity/bluetooth-le.html)
 ### <img src="./pics/arduino.png" width="60" height="40" />
 - [Arduino 1.69](https://www.arduino.cc/) with ES Framework by [J. Edward Carryer](https://profiles.stanford.edu/j-edward-carryer)
+
 ### Third-party Services and Libraries
 - [Google Firebase](https://firebase.google.com/)
 - [Butter Knife](http://jakewharton.github.io/butterknife/)
@@ -65,6 +66,11 @@ repositories {
 ```
 
 ## Android App Workflow
+<p align="center">
+<img src="./pics/android-workflow.jpeg" width="600" height="300" />
+</p>
+
+:exclamation: We realized that Bluetooth Service can only be binded with one activity at a time near the end of the project timeline, so the way we handled BLE (simply binding and unbinding when switching activities) was not elegant. We strongly suggest you use fragments inside one activity to achieve the same functionality.
 
 ## Android App GIF Demo
 Fitting Room App           |    Merchant App
@@ -72,6 +78,9 @@ Fitting Room App           |    Merchant App
 <img src="./pics/FittingRoomSide.gif" width="350" height="600" />  |  <img src="./pics/MerchantSide.gif" width="350" height="600" />
 
 ## Arduino State Machine
+<p align="center">
+<img src="./pics/state-diagram.jpg" width="750" height="400" />
+</p>
 
 ## Copyright :copyright:
 All trademarks and clothes photoes in the app are owned by Uniqlo Co., Ltd. The use of the copyrighted work involved in this project is for educational purposes, and should be considered fair use.
