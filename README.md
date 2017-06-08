@@ -21,7 +21,7 @@ Smart Fit is a IoT product designed and built by [Chi Zhang](https://www.linkedi
 - [Picasso](http://square.github.io/picasso/)
 - [Android GIF drawable](https://github.com/koral--/android-gif-drawable)
 - [Android Circular Progress Button](https://github.com/dmytrodanylyk/circular-progress-button)
-- [Adafruit BluefruitLE nRF51](https://learn.adafruit.com/introducing-the-adafruit-bluefruit-le-uart-friend/software)
+- [Adafruit BluefruitLE nRF51](https://github.com/adafruit/Adafruit_BluefruitLE_nRF51)
 - [Adafruit PN532 RFID](https://github.com/adafruit/Adafruit-PN532)
 
 ## Android Dependencies
@@ -74,7 +74,7 @@ repositories {
 <img src="./pics/android-workflow.jpeg" width="600" height="300" />
 </p>
 
-:exclamation: We realized that Bluetooth Service can only be binded with one activity at a time near the end of the project timeline, so the way we handled BLE (simply binding and unbinding when switching activities) was not elegant. We strongly suggest you use fragments inside one activity to achieve the same functionality.
+:exclamation: We realized that Bluetooth Service could only be binded with one activity at a time near the end of the project timeline, so the way we handled BLE (simply binding and unbinding when switching activities) was not elegant. We strongly suggest you use fragments inside one activity to achieve the same functionality.
 
 ## Android App GIF Demo
 Fitting Room App           |    Merchant App
@@ -87,4 +87,4 @@ Fitting Room App           |    Merchant App
 </p>
 
 ## Copyright :copyright:
-All trademarks and clothes photoes in the app are owned by Uniqlo Co., Ltd. The use of the copyrighted work involved in this project is for educational purposes, and should be considered fair use.
+All trademarks and clothes photos in the app are owned by Uniqlo Co., Ltd. The use of the copyrighted work involved in this project is for educational purposes, and should be considered fair use.
